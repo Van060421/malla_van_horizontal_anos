@@ -110,3 +110,143 @@
   </footer>
 
   <script>
+const estructura = {
+  "Primer Año": {
+    "Cuatrimestre 1": [
+      "Lenguaje Audiovisual 1", "Matemática", "Fotografía y Cámara 1",
+      "Historia de las Artes Audiovisuales 1", "Dibujo y sistemas de representación", "Informática"
+    ],
+    "Cuatrimestre 2": [
+      "Lenguaje Audiovisual 2", "Física", "Guión 1", "Introducción a la Economía",
+      "Percepción Audiovisual", "Tecnología Digital", "Trabajo Social Comunitario 1"
+    ]
+  },
+  "Segundo Año": {
+    "Cuatrimestre 3": [
+      "Fotografía y Cámara 2", "Historia de las Artes Audiovisuales 2", "Montaje 1", "Realización 1",
+      "Sonido 1", "Inglés"
+    ],
+    "Cuatrimestre 4": [
+      "Lenguaje Musical", "Guión 2", "Realización 2", "Sonido 2", "Gestión y Producción 1",
+      "Dirección de Arte", "Trabajo Social Comunitario 2"
+    ]
+  },
+  "Tercer Año": {
+    "Cuatrimestre 5": [
+      "Montaje 2", "Estética de los Medios", "Dirección Actoral", "Sociología",
+      "Realización 3", "Gestión y Producción 2", "Inglés Técnico"
+    ],
+    "Cuatrimestre 6": [
+      "Guión 3", "Legislación", "Técnicas de Investigación de Audiencias", "Diseño de Bandas Sonoras 1",
+      "Metodología de investigación", "Trabajo Social Comunitario 3"
+    ]
+  },
+  "Cuarto Año": {
+    "Cuatrimestre 7": [
+      "Nuevas tecnologías Audiovisuales", "Trabajo Final 1: Proyecto de Tesis", "Trabajo Social Comunitario 4"
+    ],
+    "Cuatrimestre 8": [
+      "Final 2: Realización y Defensa de Tesis", "Deontología y Ejercicio Profesional"
+    ]
+  },
+  "Optativas": {
+    "Animación": [
+      "Animación 2D", "Mecánica del Movimiento Específica", "Pixilatión", "Stop Motion", "Animación 3D"
+    ],
+    "Otras": [
+      "Motion Graphics", "Dirección de Arte y Efectos Especiales", "Montaje y Tecnologías Especificas",
+      "Desarrollo de Proyectos Cinematográficos de Ficción", "Taller de escritura de guiones de ficción",
+      "Realización Audiovisual Avanzada", "Historia del Teatro Argentino", "Historia del Teatro Universal"
+    ]
+  }
+};
+
+const dependencias = {
+  "Historia de las Artes Audiovisuales 2": ["Historia de las Artes Audiovisuales 1", "Lenguaje Audiovisual 1"],
+  "Lenguaje Audiovisual 2": ["Lenguaje Audiovisual 1"],
+  "Guión 2": ["Guión 1"],
+  "Fotografía y Cámara 2": ["Fotografía y Cámara 1"],
+  "Montaje 1": ["Lenguaje Audiovisual 1", "Guión 1"],
+  "Realización 1": ["Lenguaje Audiovisual 1"],
+  "Tecnología Digital": ["Fotografía y Cámara 1"],
+  "Dirección de Arte": ["Percepción Audiovisual"],
+  "Sonido 1": ["Física"],
+  "Realización 2": ["Realización 1", "Fotografía y Cámara 2"],
+  "Montaje 2": ["Montaje 1"],
+  "Diseño de Bandas Sonoras 1": ["Sonido 2", "Lenguaje Musical"],
+  "Guión 3": ["Guión 2"],
+  "Técnicas de Investigación de Audiencias": ["Gestión y Producción 1"],
+  "Gestión y Producción 2": ["Gestión y Producción 1"],
+  "Legislación": ["Gestión y Producción 2"],
+  "Metodología de investigación": ["Sociología"],
+  "Trabajo Final 1: Proyecto de Tesis": ["Técnicas de Investigación de Audiencias", "Metodología de investigación"],
+  "Trabajo Final 2: Realización y Defensa de Tesis": ["Trabajo Final 1: Proyecto de Tesis"],
+  "Deontología y Ejercicio Profesional": ["Legislación", "Sociología"],
+  "Trabajo Social Comunitario 2": ["Trabajo Social Comunitario 1"],
+  "Trabajo Social Comunitario 3": ["Trabajo Social Comunitario 2"],
+  "Trabajo Social Comunitario 4": ["Trabajo Social Comunitario 3"],
+  "Historia del Teatro Argentino": ["Lenguaje Audiovisual 2", "Historia de las Artes Audiovisuales 2"],
+  "Historia del Teatro Universal": ["Lenguaje Audiovisual 2", "Historia de las Artes Audiovisuales 2"]
+};
+
+const estados = JSON.parse(localStorage.getItem("estadoMallaVan")) || {};
+
+function guardarEstado() {
+  localStorage.setItem("estadoMallaVan", JSON.stringify(estados));
+}
+
+function crearMalla() {
+  const contenedor = document.getElementById("malla-contenedor");
+  contenedor.innerHTML = "";
+
+  for (const año in estructura) {
+    const divAño = document.createElement("div");
+    divAño.className = "año";
+    divAño.innerHTML = `<h2>${año}</h2><div class="cuatris"></div>`;
+    const cuatrisDiv = divAño.querySelector(".cuatris");
+
+    for (const cuatri in estructura[año]) {
+      const divCuatri = document.createElement("div");
+      divCuatri.className = "cuatri";
+      divCuatri.innerHTML = `<h3>${cuatri}</h3>`;
+      estructura[año][cuatri].forEach(materia => {
+        const divMateria = document.createElement("div");
+        divMateria.className = "materia";
+        divMateria.id = materia;
+        divMateria.textContent = materia;
+        if (estados[materia]) divMateria.classList.add("completada");
+        divCuatri.appendChild(divMateria);
+      });
+      cuatrisDiv.appendChild(divCuatri);
+    }
+
+    contenedor.appendChild(divAño);
+  }
+
+  actualizarBloqueadas();
+}
+
+function actualizarBloqueadas() {
+  for (const materia in dependencias) {
+    const bloqueada = !dependencias[materia].every(m => estados[m]);
+    const el = document.getElementById(materia);
+    if (el) {
+      if (bloqueada && !estados[materia]) el.classList.add("bloqueada");
+      else el.classList.remove("bloqueada");
+    }
+  }
+}
+
+document.addEventListener("click", e => {
+  if (!e.target.classList.contains("materia")) return;
+  if (e.target.classList.contains("bloqueada")) return;
+  const id = e.target.id;
+  estados[id] = !estados[id];
+  guardarEstado();
+  crearMalla();
+});
+
+window.onload = crearMalla;
+</script>
+</body>
+</html>
