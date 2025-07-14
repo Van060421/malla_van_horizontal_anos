@@ -100,7 +100,11 @@
     <h1>🎓 Malla Interactiva de Van 🩷</h1>
     <p>Click en una materia para marcarla como aprobada. Las que dependan de ella se desbloquean ✨</p>
   </header>
-
+<div style="text-align:center; margin-bottom: 1.5rem;">
+  <button onclick="reiniciarMalla()" style="padding: 0.6rem 1.2rem; border:none; background:#f5a8b5; color:white; border-radius:1rem; cursor:pointer; font-weight:bold;">
+    🔄 Reiniciar Malla
+  </button>
+</div>
   <main>
     <div id="malla-contenedor" class="contenedor-horizontal"></div>
   </main>
@@ -245,6 +249,12 @@ document.addEventListener("click", e => {
   guardarEstado();
   crearMalla();
 });
+function reiniciarMalla() {
+  if (confirm("¿Querés reiniciar toda la malla? Esto borrará tu progreso 🥺")) {
+    localStorage.removeItem("estadoMallaVan");
+    location.reload();
+  }
+}
 
 window.onload = crearMalla;
 </script>
