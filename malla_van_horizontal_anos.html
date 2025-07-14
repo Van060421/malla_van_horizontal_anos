@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Interactiva de Van ✨</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      color: #cc3366;
+      margin-bottom: 0.5rem;
+    }
+    .contenedor-horizontal {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 2rem;
+      overflow-x: auto;
+    }
+    .año {
+      min-width: 500px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.8);
+      padding: 1rem;
+      border-radius: 1rem;
+      border: 1px solid #f5a8b5;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .año h2 {
+      text-align: center;
+      color: #cc3366;
+    }
+    .cuatris {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .cuatri {
+      background-color: #ffe4ec;
+      border: 2px solid #f7b6c2;
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+    .cuatri h3 {
+      text-align: center;
+      background: #f5a8b5;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .materia {
+      background-color: #fddde6;
+      border: 1px solid #f5a8b5;
+      padding: 0.8rem;
+      margin: 0.4rem 0;
+      border-radius: 0.7rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    .materia:hover {
+      background-color: #fcd3e0;
+    }
+    .materia.completada {
+      background-color: #e89cab;
+      border-color: #cc3366;
+      text-decoration: line-through;
+      color: white;
+    }
+    .materia.bloqueada {
+      background-color: rgba(253, 221, 230, 0.4);
+      border-color: #ccc;
+      color: #999;
+      cursor: not-allowed;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Malla Interactiva de Van 🩷</h1>
+    <p>Click en una materia para marcarla como aprobada. Las que dependan de ella se desbloquean ✨</p>
+  </header>
+
+  <main>
+    <div id="malla-contenedor" class="contenedor-horizontal"></div>
+  </main>
+
+  <footer>
+    <p>Con amor y código rosa de Peter ✨</p>
+  </footer>
+
+  <script>
