@@ -155,10 +155,10 @@ const estructura = {
   },
   "Optativas": {
     "Animación": [
-      "Animación 2D", "Mecánica del Movimiento Específica", "Pixilatión", "Stop Motion", "Animación 3D"
+      "Animación 2D", "Mecánica del Movimiento Específica", "Pixilatión", "Stop Motion", "Motion Graphics"
     ],
     "Otras": [
-      "Motion Graphics", "Dirección de Arte y Efectos Especiales", "Montaje y Tecnologías Especificas",
+      "Dirección de Arte y Efectos Especiales", "Montaje y Tecnologías Especificas",
       "Desarrollo de Proyectos Cinematográficos de Ficción", "Taller de escritura de guiones de ficción",
       "Realización Audiovisual Avanzada", "Historia del Teatro Argentino", "Historia del Teatro Universal"
     ]
@@ -167,6 +167,8 @@ const estructura = {
 
 const dependencias = {
   "Historia de las Artes Audiovisuales 2": ["Historia de las Artes Audiovisuales 1", "Lenguaje Audiovisual 1"],
+  "Estética de los medios": ["Historia de las Artes Audiovisuales 2"],
+  "Sociología": ["Historia de las Artes Audiovisuales 2"],
   "Lenguaje Audiovisual 2": ["Lenguaje Audiovisual 1"],
   "Guión 2": ["Guión 1"],
   "Fotografía y Cámara 2": ["Fotografía y Cámara 1"],
@@ -175,7 +177,10 @@ const dependencias = {
   "Tecnología Digital": ["Fotografía y Cámara 1"],
   "Dirección de Arte": ["Percepción Audiovisual"],
   "Sonido 1": ["Física"],
+  "Sonido 2": ["Sonido 1"],
+  "Dirección Actoral 1": ["Realización 1"],
   "Realización 2": ["Realización 1", "Fotografía y Cámara 2"],
+  "Realización 3": ["Realización 2"],
   "Montaje 2": ["Montaje 1"],
   "Diseño de Bandas Sonoras 1": ["Sonido 2", "Lenguaje Musical"],
   "Guión 3": ["Guión 2"],
@@ -189,8 +194,20 @@ const dependencias = {
   "Trabajo Social Comunitario 2": ["Trabajo Social Comunitario 1"],
   "Trabajo Social Comunitario 3": ["Trabajo Social Comunitario 2"],
   "Trabajo Social Comunitario 4": ["Trabajo Social Comunitario 3"],
+  "Inglés Técnico": ["Inglés"],
+  "Nuevas Técnologías Audiovisuales": ["Montaje 2", "Bandas Sonoras 1"]
   "Historia del Teatro Argentino": ["Lenguaje Audiovisual 2", "Historia de las Artes Audiovisuales 2"],
-  "Historia del Teatro Universal": ["Lenguaje Audiovisual 2", "Historia de las Artes Audiovisuales 2"]
+  "Historia del Teatro Universal": ["Lenguaje Audiovisual 2", "Historia de las Artes Audiovisuales 2"],
+  "Animación 2D": ["Realización 2"],
+  "Mecánica del Movimiento Específica": ["Realización 2"],
+  "Pixilatión": ["Realización 2"],
+  "Stop Motion": ["Realización 2"],
+  "Motion Graphics": ["Montaje 2"],
+  "Dirección de Arte y Efectos Especiales": ["Realización 2"],
+  "Montaje y Tecnologías Especificas": ["Realización 2", "Montaje 2"],
+  "Desarrollo de Proyectos Cinematográficos de Ficción": ["Realización 2", "Guión 3", "Gestión y Producción 2"], 
+  "Taller de escritura de guiones de ficción": ["Guión 3"],
+  "Realización Audiovisual Avanzada": ["Realización 2"]
 };
 
 const estados = JSON.parse(localStorage.getItem("estadoMallaVan")) || {};
