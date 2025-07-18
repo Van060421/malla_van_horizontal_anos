@@ -70,10 +70,11 @@
       font-weight: 500;
       box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     }
-    .materia.pendiente {
-      background-color: #e7c5ff; /* Lila clarito */
-      border: 2px dashed #b481e3;
-      color: #5c3a86;
+   .materia.pendiente {
+  background-color: #e7c5ff; /* Lila clarito */
+  border: 2px dashed #b481e3;
+  color: #5c3a86;
+}
     }
     .materia.completada {
       background-color: #cc3366; /* Aprobada */
@@ -262,7 +263,12 @@ function crearMalla() {
         divMateria.className = "materia";
         divMateria.id = materia;
         divMateria.textContent = materia;
-        if (estados[materia]) divMateria.classList.add("completada");
+        if (estados[materia] === "completada") {
+  divMateria.classList.add("completada");
+} else if (estados[materia] === "pendiente") {
+  divMateria.classList.add("pendiente");
+}
+        }
         divCuatri.appendChild(divMateria);
       });
       cuatrisDiv.appendChild(divCuatri);
