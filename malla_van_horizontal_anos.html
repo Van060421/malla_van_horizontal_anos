@@ -100,6 +100,13 @@
     <h1>🎓 Malla Interactiva de Van 🩷</h1>
     <p>Click en una materia para marcarla como aprobada. Las que dependan de ella se desbloquean ✨</p>
   </header>
+  <div id="contador-materias" style="text-align:center; font-size: 1rem; margin-bottom: 1.5rem; color: #cc3366; font-weight: bold;">
+  Cargando progreso... 🩷
+</div>
+  <div id="barra-progreso-container" style="width: 80%; margin: auto; background: #fddde6; border-radius: 20px; overflow: hidden; height: 24px; box-shadow: 0 0 5px #ccc;">
+  <div id="barra-progreso" style="height: 100%; width: 0%; background: #cc3366; transition: width 0.5s ease;"></div>
+</div>
+<p style="text-align:center; margin-top: 5px; font-weight: bold;" id="texto-progreso">0% completado</p>
 <div style="text-align:center; margin-bottom: 1.5rem;">
   <button onclick="reiniciarMalla()" style="padding: 0.6rem 1.2rem; border:none; background:#f5a8b5; color:white; border-radius:1rem; cursor:pointer; font-weight:bold;">
     🔄 Reiniciar Malla
@@ -114,6 +121,8 @@
   </footer>
 
   <script>
+const materiasTecnicatura = new Set();
+const materiasLicenciatura = new Set();
 const estructura = {
   "Primer Año": {
     "Cuatrimestre 1": [
@@ -164,7 +173,15 @@ const estructura = {
     ]
   }
 };
-
+for (const año in estructura) {
+  const esTecnicatura = ["Primer Año", "Segundo Año", "Tercer Año"].includes(año);
+  for (const cuatri in estructura[año]) {
+    estructura[año][cuatri].forEach(m => {
+      if (esTecnicatura) materiasTecnicatura.add(m);
+      materiasLicenciatura.add(m);
+    });
+  }
+}
 const dependencias = {
   "Historia de las Artes Audiovisuales 2": ["Historia de las Artes Audiovisuales 1", "Lenguaje Audiovisual 1"],
   "Estética de los medios": ["Historia de las Artes Audiovisuales 2"],
@@ -245,6 +262,7 @@ function crearMalla() {
   }
 
   actualizarBloqueadas();
+  actualizarContadores();
 }
 
 function actualizarBloqueadas() {
@@ -256,6 +274,30 @@ function actualizarBloqueadas() {
       else el.classList.remove("bloqueada");
     }
   }
+}
+function actualizarContadores() {
+  const total = Object.keys(estados).length;
+  const aprobadas = Object.values(estados).filter(v => v).length;
+
+  const tecniTotal = [...materiasTecnicatura].length;
+  const tecniAprobadas = [...materiasTecnicatura].filter(m => estados[m]).length;
+
+  const licTotal = [...materiasLicenciatura].length;
+  const licAprobadas = [...materiasLicenciatura].filter(m => estados[m]).length;
+
+  const porcentaje = Math.round((aprobadas / total) * 100);
+
+  document.getElementById("contador-materias").innerHTML = `
+    📚 Materias Totales: <strong>${total}</strong> |
+    ✅ Aprobadas: <strong>${aprobadas}</strong><br>
+    🎓 Tecnicatura: <strong>${tecniAprobadas}/${tecniTotal}</strong> |
+    🎓 Licenciatura: <strong>${licAprobadas}/${licTotal}</strong>
+  `;
+
+  const barra = document.getElementById("barra-progreso");
+  const texto = document.getElementById("texto-progreso");
+  barra.style.width = `${porcentaje}%`;
+  texto.textContent = `${porcentaje}% completado`;
 }
 
 document.addEventListener("click", e => {
