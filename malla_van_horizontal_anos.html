@@ -70,6 +70,16 @@
       font-weight: 500;
       box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     }
+    .materia.pendiente {
+      background-color: #e7c5ff; /* Lila clarito */
+      border: 2px dashed #b481e3;
+      color: #5c3a86;
+    }
+    .materia.completada {
+      background-color: #cc3366; /* Aprobada */
+      color: white;
+      text-decoration: line-through;
+    }
     .materia:hover {
       background-color: #fcd3e0;
     }
@@ -267,7 +277,7 @@ function crearMalla() {
 
 function actualizarBloqueadas() {
   for (const materia in dependencias) {
-    const bloqueada = !dependencias[materia].every(m => estados[m]);
+    const bloqueada = !dependencias[materia].every(m => estados[m] === "completada");
     const el = document.getElementById(materia);
     if (el) {
       if (bloqueada && !estados[materia]) el.classList.add("bloqueada");
@@ -303,8 +313,18 @@ function actualizarContadores() {
 document.addEventListener("click", e => {
   if (!e.target.classList.contains("materia")) return;
   if (e.target.classList.contains("bloqueada")) return;
+
   const id = e.target.id;
-  estados[id] = !estados[id];
+  const estadoActual = estados[id];
+
+  if (estadoActual === "pendiente") {
+    estados[id] = "completada";
+  } else if (estadoActual === "completada") {
+    delete estados[id]; // lo resetea
+  } else {
+    estados[id] = "pendiente";
+  }
+
   guardarEstado();
   crearMalla();
 });
