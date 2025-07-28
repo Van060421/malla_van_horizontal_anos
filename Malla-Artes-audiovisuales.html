@@ -100,7 +100,7 @@
     "Trabajo Social Comunitario 3": ["Trabajo Social Comunitario 2"],
     "Trabajo Social Comunitario 4": ["Trabajo Social Comunitario 3"],
     "Inglés Técnico": ["Inglés"],
-    "Nuevas Tecnologías Audiovisuales": ["Montaje 2", "Bandas Sonoras 1"]
+    "Nuevas Tecnologías Audiovisuales": ["Montaje 2", "Diseño de Bandas Sonoras 1"]
   };
 
   // Estado de materias aprobadas (por LocalStorage)
@@ -111,7 +111,7 @@
   }
   function reiniciar() {
     if (confirm("¿Está seguro de borrar todo el proceso marcado?")) {
-      localStorage.removeItem("estadoTurismo");
+      localStorage.removeItem("estadoMallaAudiovisual");
       location.reload();
     }
   }
@@ -124,31 +124,6 @@
       const divAño = document.createElement("div");
       divAño.className = "año";
       divAño.innerHTML = `<h2>${año}</h2>`;
-
-      // Optativas se manejan diferente
-      if (año === "Optativa") {
-        const divCuatri = document.createElement("div");
-        divCuatri.className = "cuatri";
-        divCuatri.innerHTML = `<h3>Optativas</h3>`;
-        materias[año].forEach(nombre => {
-          const divMateria = document.createElement("div");
-          divMateria.className = "materia";
-          divMateria.textContent = nombre;
-          if (estado[nombre]) {
-            divMateria.classList.add("aprobada");
-            total++;
-            licencia++; // Optativa suma solo a licenciatura
-          }
-          divMateria.onclick = () => {
-            estado[nombre] = !estado[nombre];
-            guardar();
-            crearMalla();
-          };
-          divCuatri.appendChild(divMateria);
-        });
-        divAño.appendChild(divCuatri);
-        contenedor.appendChild(divAño);
-        continue;
       }
 
       // Por cuatrimestre
