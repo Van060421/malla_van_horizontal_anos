@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malla Interactiva</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f0fdfc; color: #1d1d1d; margin: 0; padding: 0; }
+    header { background: #a7e3dc; color: #083c3a; text-align: center; padding: 1rem; font-size: 1.5rem; }
+    .contenedor { display: flex; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: 1rem; gap: 2rem; }
+    .año { min-width: 300px; flex-shrink: 0; }
+    .año h2 { text-align: center; background: #cc3366; padding: 0.5rem; border-radius: 8px; }
+    .cuatri { margin: 1rem 0; padding: 1rem; background: #ffe4; border-radius: 8px; }
+    .cuatri h3 { margin-top: 0; background: #f5a8b5; color: white; }
+    .materia { padding: 0.4rem 0.8rem; margin: 0.3rem 0; border-radius: 6px; background: : #fddd; cursor: pointer; transition: 0.2s; border: 1px solid #f5a8b5; }
+    .materia:hover { background: #fcd3; }
+    .materia.bloqueada { background: rgba(253, 221, 230, 0.4); cursor: not-allowed; color: #999; }
+    .materia.aprobada { background: : #e89c; text-decoration: line-through; border-color: #cc3366; text-decoration: line-through; color: white;}
+    .contador { margin: 1rem; font-weight: bold; text-align: center; }
+    button { display: block; margin: 1rem auto; padding: 0.5rem 1rem; font-size: 1rem; background: #4bbf9c; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #3aa487; }
+    @media (max-width: 768px) { .contenedor { flex-direction: column; overflow-x: visible; } }
+  </style>
+</head>
+<body>
+  <header>Malla Interactiva - Licenciatura en Turismo</header>
+  <div class="contador" id="contador">Materias aprobadas: 0 | Tecnicatura: 0 | Licenciatura: 0</div>
+  <button onclick="reiniciar()">Reiniciar Malla</button>
+  <div class="contenedor" id="contenedor"></div>
+  <script>
+  // Estructura de materias por año y cuatrimestre
+  const materias = {
+    "Primer Año": {
+    "Cuatrimestre 1": [
+      "Lenguaje Audiovisual 1", "Matemática", "Fotografía y Cámara 1",
+      "Historia de las Artes Audiovisuales 1", "Dibujo y sistemas de representación", "Informática", 
+    ],
+    "Cuatrimestre 2": [
+      "Lenguaje Audiovisual 2", "Física", "Guión 1", "Introducción a la Economía",
+      "Percepción Audiovisual", "Tecnología Digital", "Trabajo Social Comunitario 1"
+    ]
+  },
+  "Segundo Año": {
+    "Cuatrimestre 3": [
+      "Fotografía y Cámara 2", "Historia de las Artes Audiovisuales 2", "Montaje 1", "Realización 1",
+      "Sonido 1", "Inglés"
+    ],
+    "Cuatrimestre 4": [
+      "Lenguaje Musical", "Guión 2", "Realización 2", "Sonido 2", "Gestión y Producción 1",
+      "Dirección de Arte", "Trabajo Social Comunitario 2"
+    ]
+  },
+  "Tercer Año": {
+    "Cuatrimestre 5": [
+      "Montaje 2", "Estética de los Medios", "Dirección Actoral", "Sociología",
+      "Realización 3", "Gestión y Producción 2", "Inglés Técnico"
+    ],
+    "Cuatrimestre 6": [
+      "Guión 3", "Legislación", "Técnicas de Investigación de Audiencias", "Diseño de Bandas Sonoras 1",
+      "Metodología de investigación", "Trabajo Social Comunitario 3"
+    ]
+  },
+  "Cuarto Año": {
+    "Cuatrimestre 7": [
+      "Nuevas tecnologías Audiovisuales", "Trabajo Final 1: Proyecto de Tesis", "Trabajo Social Comunitario 4"
+    ],
+    "Cuatrimestre 8": [
+      "Trabajo Final 2: Realización y Defensa de Tesis", "Deontología y Ejercicio Profesional"
+    ]
+  };
+
+  // Dependencias/correlativas
+  const dependencias = {
+    "Historia de las Artes Audiovisuales 2": ["Historia de las Artes Audiovisuales 1", "Lenguaje Audiovisual 1"],
+    "Estética de los medios": ["Historia de las Artes Audiovisuales 2"],
+    "Sociología": ["Historia de las Artes Audiovisuales 2"],
+    "Lenguaje Audiovisual 2": ["Lenguaje Audiovisual 1"],
+    "Guión 2": ["Guión 1"],
+    "Fotografía y Cámara 2": ["Fotografía y Cámara 1"],
+    "Montaje 1": ["Lenguaje Audiovisual 1", "Guión 1"],
+    "Realización 1": ["Lenguaje Audiovisual 1"],
+    "Tecnología Digital": ["Fotografía y Cámara 1"],
+    "Dirección de Arte": ["Percepción Audiovisual"],
+    "Sonido 1": ["Física"],
+    "Sonido 2": ["Sonido 1"],
+    "Dirección Actoral 1": ["Realización 1"],
+    "Realización 2": ["Realización 1", "Fotografía y Cámara 2"],
+    "Realización 3": ["Realización 2"],
+    "Montaje 2": ["Montaje 1"],
+    "Diseño de Bandas Sonoras 1": ["Sonido 2", "Lenguaje Musical"],
+    "Guión 3": ["Guión 2"],
+    "Técnicas de Investigación de Audiencias": ["Gestión y Producción 1"],
+    "Gestión y Producción 2": ["Gestión y Producción 1"],
+    "Legislación": ["Gestión y Producción 2"],
+    "Metodología de investigación": ["Sociología"],
+    "Trabajo Final 1: Proyecto de Tesis": ["Técnicas de Investigación de Audiencias", "Metodología de investigación"],
+    "Trabajo Final 2: Realización y Defensa de Tesis": ["Trabajo Final 1: Proyecto de Tesis"],
+    "Deontología y Ejercicio Profesional": ["Legislación", "Sociología"],
+    "Trabajo Social Comunitario 2": ["Trabajo Social Comunitario 1"],
+    "Trabajo Social Comunitario 3": ["Trabajo Social Comunitario 2"],
+    "Trabajo Social Comunitario 4": ["Trabajo Social Comunitario 3"],
+    "Inglés Técnico": ["Inglés"],
+    "Nuevas Técnologías Audiovisuales": ["Montaje 2", "Bandas Sonoras 1"]
+  };
+
+  // Estado de materias aprobadas (por LocalStorage)
+  const estado = JSON.parse(localStorage.getItem("estadoTurismo") || "{}");
+
+  function guardar() {
+    localStorage.setItem("estadoTurismo", JSON.stringify(estado));
+  }
+  function reiniciar() {
+    if (confirm("¿Está seguro de borrar todo el proceso marcado?")) {
+      localStorage.removeItem("estadoTurismo");
+      location.reload();
+    }
+  }
+
+  function crearMalla() {
+    const contenedor = document.getElementById("contenedor");
+    contenedor.innerHTML = "";
+    let total = 0, tecnica = 0, licencia = 0;
+    for (const año in materias) {
+      const divAño = document.createElement("div");
+      divAño.className = "año";
+      divAño.innerHTML = `<h2>${año}</h2>`;
+
+      // Optativas se manejan diferente
+      if (año === "Optativa") {
+        const divCuatri = document.createElement("div");
+        divCuatri.className = "cuatri";
+        divCuatri.innerHTML = `<h3>Optativas</h3>`;
+        materias[año].forEach(nombre => {
+          const divMateria = document.createElement("div");
+          divMateria.className = "materia";
+          divMateria.textContent = nombre;
+          if (estado[nombre]) {
+            divMateria.classList.add("aprobada");
+            total++;
+            licencia++; // Optativa suma solo a licenciatura
+          }
+          divMateria.onclick = () => {
+            estado[nombre] = !estado[nombre];
+            guardar();
+            crearMalla();
+          };
+          divCuatri.appendChild(divMateria);
+        });
+        divAño.appendChild(divCuatri);
+        contenedor.appendChild(divAño);
+        continue;
+      }
+
+      // Por cuatrimestre
+      for (const cuatri in materias[año]) {
+        const divCuatri = document.createElement("div");
+        divCuatri.className = "cuatri";
+        divCuatri.innerHTML = `<h3>${cuatri}</h3>`;
+        materias[año][cuatri].forEach(nombre => {
+          const divMateria = document.createElement("div");
+          divMateria.className = "materia";
+          divMateria.textContent = nombre;
+
+          // Verificar correlativas
+          const requisitos = dependencias[nombre] || [];
+          const desbloqueada = requisitos.every(req => estado[req]);
+          if (!desbloqueada) divMateria.classList.add("bloqueada");
+          if (estado[nombre]) {
+            divMateria.classList.remove("bloqueada");
+            divMateria.classList.add("aprobada");
+            total++;
+           if (["Primer Año", "Segundo Año", "Tercer Año", "Optativa"].includes(año)) tecnica++;
+           if (["Primer Año", "Segundo Año", "Tercer Año", "Cuarto Año", "Optativa"].includes(año)) licencia++;
+
+          }
+          divMateria.onclick = () => {
+            if (divMateria.classList.contains("bloqueada")) return;
+            estado[nombre] = !estado[nombre];
+            guardar();
+            crearMalla();
+          };
+          divCuatri.appendChild(divMateria);
+        });
+        divAño.appendChild(divCuatri);
+      }
+      contenedor.appendChild(divAño);
+    }
+    document.getElementById("contador").textContent =
+      `Materias aprobadas: ${total} | Tecnicatura: ${tecnica}/40 | Licenciatura: ${licencia}/56`;
+  }
+  crearMalla();
+</script>
+  <video id="felicitacion" width="300" style="display:none; position: fixed; bottom: 10px; right: 10px; z-index: 9999;" autoplay muted>
+  <source src="felicitacion.mp4" type="video/mp4">
+  Tu navegador no soporta videos :(
+</video>
+</body>
+</html>
