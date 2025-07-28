@@ -169,8 +169,8 @@
             divMateria.classList.remove("bloqueada");
             divMateria.classList.add("aprobada");
             total++;
-           if (["Primer Año", "Segundo Año", "Tercer Año", "Optativa"].includes(año)) tecnica++;
-           if (["Primer Año", "Segundo Año", "Tercer Año", "Cuarto Año", "Optativa"].includes(año)) licencia++;
+           if (["Primer Año", "Segundo Año", "Tercer Año"].includes(año)) tecnica++;
+           if (["Primer Año", "Segundo Año", "Tercer Año", "Cuarto Año"].includes(año)) licencia++;
 
           }
           divMateria.onclick = () => {
@@ -186,7 +186,7 @@
       contenedor.appendChild(divAño);
     }
     document.getElementById("contador").textContent =
-      `Materias aprobadas: ${total} | Tecnicatura: ${tecnica}/40 | Licenciatura: ${licencia}/56`;
+      `Materias aprobadas: ${total} | Tecnicatura: ${tecnica}/39 | Licenciatura: ${licencia}/44`;
   }
   crearMalla();
 </script>
